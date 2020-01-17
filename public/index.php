@@ -3,6 +3,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+use Slim\Routing\RouteCollectorProxy;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -21,7 +22,9 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     
     return $response->withHeader('Location', 'listado');
 });
-$app->group('', function ($group) {
+
+$app->group('', function (RouteCollectorProxy $group) {
+
 $group->get('/listado', function (Request $request, Response $response, array $args) {
     include_once("productos.php");
     if (!isset($_SESSION['username'])) {
@@ -110,6 +113,7 @@ $group->post('/verCarrito', function (Request $request, Response $response, arra
         // Instead of throwing an exception, you can return an appropriate response
         //throw new \Slim\Exception\HttpForbiddenException($request);
         $response = $handler->handle($request);
+        $response = $response->withStatus(401);
         return $response->withHeader("Location", "login");
     }
     $response = $handler->handle($request);
