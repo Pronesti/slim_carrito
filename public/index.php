@@ -21,8 +21,8 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     
     return $response->withHeader('Location', 'listado');
 });
-
-$app->get('/listado', function (Request $request, Response $response, array $args) {
+$app->group('', function ($group) {
+$group->get('/listado', function (Request $request, Response $response, array $args) {
     include_once("productos.php");
     if (!isset($_SESSION['username'])) {
         $_SESSION['username'] = "";
@@ -52,14 +52,14 @@ $app->get('/listado', function (Request $request, Response $response, array $arg
     return $response;
 });
 
-$app->post('/listado', function (Request $request, Response $response, array $args) {
+$group->post('/listado', function (Request $request, Response $response, array $args) {
     for ($i = 0; $i < $_POST['cantidad']; $i++) {
         $_SESSION['carrito'][] = $_POST['item'];
     }
     return $response->withHeader('Location', 'listado');
 });
 
-$app->get('/verCarrito', function (Request $request, Response $response, array $args) {
+$group->get('/verCarrito', function (Request $request, Response $response, array $args) {
     include_once("productos.php");
     if (!isset($_SESSION['carrito'])) {
         $_SESSION['carrito'] = array();
@@ -95,13 +95,26 @@ $app->get('/verCarrito', function (Request $request, Response $response, array $
     return $response;
 });
 
-$app->post('/verCarrito', function (Request $request, Response $response, array $args) {
+$group->post('/verCarrito', function (Request $request, Response $response, array $args) {
     if (isset($_POST['deleteAll'])) {
         $_SESSION['carrito'] = array();
     } else {
         unset($_SESSION['carrito'][$_POST['item']]);
     }
     return $response->withHeader('Location', 'verCarrito');
+});
+
+})->add(function($request, $handler){
+    // randomly authorize/reject requests
+    if(!$_SESSION['isLogged']) {
+        // Instead of throwing an exception, you can return an appropriate response
+        //throw new \Slim\Exception\HttpForbiddenException($request);
+        $response = $handler->handle($request);
+        return $response->withHeader("Location", "login");
+    }
+    $response = $handler->handle($request);
+    //$response->getBody()->write('(this request was authorized by the middleware)');
+    return $response;
 });
 
 $app->get('/login', function (Request $request, Response $response, array $args) {
@@ -164,12 +177,6 @@ $app->post('/register', function (Request $request, Response $response, array $a
         $_SESSION['isLogged'] = true;
         return $response->withHeader('Location', 'listado');
     } 
-    return $response;
-});
-
-$app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
-    $name = $args['name'];
-    $response->getBody()->write("Hello, $name");
     return $response;
 });
 
