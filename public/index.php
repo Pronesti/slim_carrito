@@ -9,7 +9,16 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = AppFactory::create();
 session_start();
 
+// To help the built-in PHP dev server, check if the request was actually for
+// something which should probably be served as a static file
+if (PHP_SAPI == 'cli-server') {
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) return false;
+}
+
 $app->get('/', function (Request $request, Response $response, array $args) {
+    
     return $response->withHeader('Location', 'listado');
 });
 
@@ -38,6 +47,7 @@ $app->get('/listado', function (Request $request, Response $response, array $arg
     }
     $te->addVariable("contenido", $lista);
 
+    $response->getBody()->write('<head><link rel="stylesheet" type="text/css" href="' . __FILE__ . '/css/bootstrap.min.css"></head>');
     $response->getBody()->write($te->render());
     return $response;
 });
