@@ -1,0 +1,18 @@
+<tr>
+<th scope='row'>
+{{key}}
+</th>
+<td>
+<img src='{{url}}' style='width:70px;border-radius:100%'></td><td>
+{{name}}
+</td>
+<td>
+{{price}}
+</td>
+<td>
+<form action="verCarrito" method='POST'>
+<input type='hidden' name='item' value={{posicion}} >
+<input type='submit' class='btn btn-outline-danger' value='X'>
+</form>
+</td>
+</tr>

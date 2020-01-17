@@ -1,0 +1,29 @@
+<div class="card m-2">
+<table class="table table-striped">
+<thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Fotos</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Precio</th>
+      <th scope="col">Eliminar</th>
+    </tr>
+  </thead>
+  <tbody>   
+    {{listaCarrito}}
+            <tr>
+            <td>Total:</td>
+            <td></td>
+            <td></td>
+            <td>
+            ${{total}}
+            </td>
+            <td>
+            <form action='verCarrito' method='POST'>
+            <input class='form-control' type='hidden' name='deleteAll' value='1'>
+            <input class='btn btn-danger' type='submit' value='Borrar Todos'></form>
+            </td>
+            </tr>
+  </tbody>
+</table>
+</div>

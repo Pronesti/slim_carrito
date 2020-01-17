@@ -1,0 +1,19 @@
+<form class='card m-2 float-left' style='width: 18rem;height: 28rem' action='listado' method='POST'>
+<div class='card-body'>
+<img src='{{url}}' class='card-img-top' style='width=200px; height:200px;'>
+<h5 class='card-title text-center'>
+{{name}}
+</h5>
+<ul class='list-group m-2'>
+<li class='list-group-item'>
+Cantidad: {{quantity}}
+</li>
+<li class='list-group-item'>
+Precio: ${{price}}
+</li>
+</ul>
+<input name="item" type="hidden" value={{key}} class="form-control">
+<input name="cantidad" type="number" value=0 min="1" class="form-control mb-1">
+<input type="submit" value="comprar" class='btn btn-primary w-100'>
+</div>
+</form>

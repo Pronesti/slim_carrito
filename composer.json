@@ -1,0 +1,12 @@
+{
+    "require": {
+        "slim/psr7": "^1.0",
+        "slim/slim": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Carrito\\": "src/",
+            "Library\\": "lib/"
+        }
+    }
+}
