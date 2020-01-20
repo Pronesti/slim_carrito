@@ -3,6 +3,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+use Slim\Handlers\Strategies\RequestHandler;
 use Slim\Routing\RouteCollectorProxy;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -183,5 +184,14 @@ $app->post('/register', function (Request $request, Response $response, array $a
     } 
     return $response;
 });
+
+$checkLogin = function (Request $request, RequestHandler $handler){
+    if(empty($_SESSION['logged']) || $_SESSION['logged'] !== true){
+        $response = new \Slim\Psr7\Response();
+        $response->getBody()->write("NO ESTAS LOGUEADO");
+        return $response;
+    }
+    return $handler->handle($request);
+};
 
 $app->run();
